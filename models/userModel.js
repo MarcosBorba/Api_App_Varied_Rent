@@ -28,7 +28,6 @@ newUser.plugin(beautifyUnique, {
 });
 
 newUser.methods.encryptPassword = async(password) => {
-    console.log("password = " + password)
     const salt = await bcrypt.genSalt(10);
     return bcrypt.hash(password, salt);
 };

@@ -47,7 +47,17 @@ module.exports = {
                 throw new ErrorHandler(401, "incorrect password");
             }
             const token = jwt.sign({ id: userLogin._id }, config.secret, {});
-            res.status(200).send({ auth: true, token: token });
+            res.status(200).send({
+                auth: true,
+                token: token,
+                name: userLogin.name,
+                genre: userLogin.genre,
+                email: userLogin.email,
+                landlord_type: userLogin.landlord_type,
+                cpf_cnpj: userLogin.cpf_cnpj,
+                phones: userLogin.phones,
+                address: userLogin.address
+            });
         } catch (error) {
             if (error instanceof ErrorHandler) {
                 next(error);
