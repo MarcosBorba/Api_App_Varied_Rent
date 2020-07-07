@@ -2,7 +2,7 @@ const UserModel = require('../models/userModel');
 var jwt = require('jsonwebtoken');
 var config = require('../config');
 const { ErrorHandler } = require('../controllers/errorHandler');
-
+//TODO: otimizar para melhorar seguranca contra ataques
 module.exports = {
     create_user: async(req, res, next) => {
         try {
@@ -48,6 +48,7 @@ module.exports = {
             }
             const token = jwt.sign({ id: userLogin._id }, config.secret, {});
             res.status(200).send({
+                id: userLogin._id,
                 auth: true,
                 token: token,
                 name: userLogin.name,
@@ -102,5 +103,49 @@ module.exports = {
     },
     logout_user: (req, res, next) => {
         res.status(200).send({ auth: false, token: null, msg: "logged out" });
+    },
+    check_user: async(req, res, next) => {
+        try {
+            const { email, password } = req.body;
+
+            const userCheck = await UserModel.findOne({ 'email': email });
+            if (userCheck == null) throw new ErrorHandler(404, "The email doesn't exists");
+
+            const validPassword = await userCheck.validatePassword(password, userCheck.password);
+            if (validPassword == false) throw new ErrorHandler(401, "incorrect password");
+
+            res.status(200).send({ auth: true });
+        } catch (error) {
+            if (error instanceof ErrorHandler) {
+                next(error);
+            } else {
+                next(new ErrorHandler(500, "Internal Server Error"));
+            }
+        }
+    },
+    update_email: async(req, res, next) => {
+        try {
+            const { oldEmail, newEmail, newEmailConfirmed } = req.body;
+            if (newEmail != newEmailConfirmed || newEmail == null) {
+                throw new ErrorHandler(401, "The new email is different from the new verified email");
+            } else {
+                const userOld = await UserModel.findOne({ 'email': oldEmail })
+                if (userOld == null) throw new ErrorHandler(404, "The current email was not found");
+
+                const userEmailUpdate = await UserModel.updateOne({ 'email': oldEmail }, {
+                    $set: { email: newEmail }
+                });
+                if (userEmailUpdate == null) throw new ErrorHandler(400, "The email update has not been completed");
+
+                res.status(200).send({ auth: true });
+            }
+        } catch (error) {
+            if (error instanceof ErrorHandler) {
+                next(error);
+            } else {
+                console.log(error)
+                next(new ErrorHandler(500, "Internal Server Error"));
+            }
+        }
     }
 }
