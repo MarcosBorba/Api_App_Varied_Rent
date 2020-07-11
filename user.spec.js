@@ -212,6 +212,25 @@ describe('Teste de usuarios da api', () => {
                 done();
             })
     })
+    it('Updating password', (done) => {
+        let userTestUpdateEmailUser = {
+            userEmail: userTest.email,
+            newPassword: "Marcos11",
+            newPasswordConfirmed: "Marcos11"
+        }
+        chai.request(base_url)
+            .put('/userRoute/update_password')
+            .set('x-access-token', tokenLogin)
+            .send(userTestUpdateEmailUser)
+            .end((err, res) => {
+                //console.log(res.body)
+                expect(res).to.have.status(200)
+                expect(res.body).to.be.a('object')
+                expect(res.body).to.have.property("auth")
+                userTest.password = "Marcos11"
+                done();
+            })
+    })
     after(done => {
         let Usuario = require('./models/userModel')
         Usuario.deleteOne({
@@ -219,7 +238,6 @@ describe('Teste de usuarios da api', () => {
             })
             .then(ok => {
                 console.log("ok => ", ok)
-                console.log("Apagou User Test!")
                 done()
             })
             .catch(error => {

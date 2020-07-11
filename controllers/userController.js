@@ -147,5 +147,32 @@ module.exports = {
                 next(new ErrorHandler(500, "Internal Server Error"));
             }
         }
-    }
+    },
+    update_password: async(req, res, next) => {
+        try {
+            const { userEmail, newPassword, newPasswordConfirmed } = req.body;
+            if (newPassword != newPasswordConfirmed || newPassword == null) {
+                throw new ErrorHandler(401, "The new password is different from the new verified password");
+            } else {
+                const userOld = await UserModel.findOne({ 'email': userEmail })
+                if (userOld == null) throw new ErrorHandler(404, "The current email was not found");
+
+                let passwordEncrypt = await userOld.encryptPassword(newPasswordConfirmed);
+                const userPasswordUpdate = await UserModel.updateOne({ 'email': userEmail }, {
+                    $set: { password: passwordEncrypt }
+                });
+                if (userPasswordUpdate == null) throw new ErrorHandler(400, "The password update has not been completed");
+
+                res.status(200).send({ auth: true });
+            }
+        } catch (error) {
+            if (error instanceof ErrorHandler) {
+                next(error);
+            } else {
+                console.log(error)
+                next(new ErrorHandler(500, "Internal Server Error"));
+            }
+        }
+    },
+
 }
