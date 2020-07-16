@@ -233,11 +233,21 @@ describe('Teste de usuarios da api', () => {
             })
     })
     it('Updating profile', (done) => {
-        userTest.name = "Name Tester Tester";
+        let userTestProfileUpdateUser = {
+            old_cpf_cnpj: userTest.cpf_cnpj,
+            name: "Name Tester Tester",
+            genre: userTest.genre,
+            landlord_type: userTest.landlord_type,
+            cpf_cnpj: userTest.cpf_cnpj,
+            phones: {
+                telephone1: userTest.phones.telephone1,
+                telephone2: userTest.phones.telephone2,
+            },
+        }
         chai.request(base_url)
             .put('/userRoute/update_profile')
             .set('x-access-token', tokenLogin)
-            .send(userTest)
+            .send(userTestProfileUpdateUser)
             .end((err, res) => {
                 //console.log(res.body)
                 expect(res).to.have.status(200)

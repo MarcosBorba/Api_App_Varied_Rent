@@ -174,12 +174,13 @@ module.exports = {
     },
     update_profile: async(req, res, next) => {
         try {
-            const { name, genre, landlord_type, cpf_cnpj, phones } = req.body;
+            //TODO: olhar erro cpf ou cnpj igual
+            const { old_cpf_cnpj, name, genre, landlord_type, cpf_cnpj, phones } = req.body;
 
-            const verifyUser = await UserModel.findOne({ 'cpf_cnpj': cpf_cnpj })
+            const verifyUser = await UserModel.findOne({ 'cpf_cnpj': old_cpf_cnpj })
             if (verifyUser == null) throw new ErrorHandler(404, "Failed to update profile data");
 
-            const userProfileUpdate = await UserModel.updateOne({ 'cpf_cnpj': cpf_cnpj }, {
+            const userProfileUpdate = await UserModel.updateOne({ 'cpf_cnpj': old_cpf_cnpj }, {
                 $set: {
                     name: name,
                     genre: genre,
