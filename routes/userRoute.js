@@ -11,5 +11,6 @@ router.put('/edit', verify.verifyJWT, userController.update_user);
 router.post('/check_user', verify.verifyJWT, userController.check_user);
 router.put('/update_email', verify.verifyJWT, userController.update_email);
 router.put('/update_password', verify.verifyJWT, userController.update_password);
+router.put('/update_profile', verify.verifyJWT, userController.update_profile);
 
 module.exports = router;

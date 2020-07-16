@@ -143,7 +143,6 @@ module.exports = {
             if (error instanceof ErrorHandler) {
                 next(error);
             } else {
-                console.log(error)
                 next(new ErrorHandler(500, "Internal Server Error"));
             }
         }
@@ -169,7 +168,35 @@ module.exports = {
             if (error instanceof ErrorHandler) {
                 next(error);
             } else {
-                console.log(error)
+                next(new ErrorHandler(500, "Internal Server Error"));
+            }
+        }
+    },
+    update_profile: async(req, res, next) => {
+        try {
+            const { name, genre, landlord_type, cpf_cnpj, phones } = req.body;
+
+            const verifyUser = await UserModel.findOne({ 'cpf_cnpj': cpf_cnpj })
+            if (verifyUser == null) throw new ErrorHandler(404, "Failed to update profile data");
+
+            const userProfileUpdate = await UserModel.updateOne({ 'cpf_cnpj': cpf_cnpj }, {
+                $set: {
+                    name: name,
+                    genre: genre,
+                    landlord_type: landlord_type,
+                    cpf_cnpj: cpf_cnpj,
+                    phones: phones
+                }
+            });
+            if (userProfileUpdate == null)
+                throw new ErrorHandler(400, "The profile update has not been completed");
+
+            res.status(200).send({ auth: true });
+
+        } catch (error) {
+            if (error instanceof ErrorHandler) {
+                next(error);
+            } else {
                 next(new ErrorHandler(500, "Internal Server Error"));
             }
         }

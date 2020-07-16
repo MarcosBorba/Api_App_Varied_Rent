@@ -74,6 +74,7 @@ describe('Teste de usuarios da api', () => {
                 expect(res.body).to.have.property("status")
                 expect(res.body).to.have.property("statusCode")
                 expect(res.body).to.have.property("message")
+                userTest.cpf_cnpj = "000.265.421-90";
                 done();
             })
     })
@@ -228,6 +229,20 @@ describe('Teste de usuarios da api', () => {
                 expect(res.body).to.be.a('object')
                 expect(res.body).to.have.property("auth")
                 userTest.password = "Marcos11"
+                done();
+            })
+    })
+    it('Updating profile', (done) => {
+        userTest.name = "Name Tester Tester";
+        chai.request(base_url)
+            .put('/userRoute/update_profile')
+            .set('x-access-token', tokenLogin)
+            .send(userTest)
+            .end((err, res) => {
+                //console.log(res.body)
+                expect(res).to.have.status(200)
+                expect(res.body).to.be.a('object')
+                expect(res.body).to.have.property("auth")
                 done();
             })
     })
