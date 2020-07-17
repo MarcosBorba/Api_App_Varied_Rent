@@ -193,8 +193,7 @@ module.exports = {
                     phones: phones
                 }
             });
-            if (userProfileUpdate == null)
-                throw new ErrorHandler(400, "The profile update has not been completed");
+            if (userProfileUpdate == null) throw new ErrorHandler(400, "The profile update has not been completed");
 
             res.status(200).send({ auth: true });
 
@@ -206,5 +205,36 @@ module.exports = {
             }
         }
     },
+    update_address: async(req, res, next) => {
+        try {
+            const { email, country, state, city, zip_code, neighborhood, street, number } = req.body;
 
+            const verifyUserEmail = await UserModel.findOne({ 'email': email });
+            if (verifyUserEmail == null) throw new ErrorHandler(404, "The current email was not found")
+
+            const userAddressUpdate = await UserModel.updateOne({ 'email': email }, {
+                $set: {
+                    address: {
+                        country: country,
+                        state: state,
+                        city: city,
+                        zip_code: zip_code,
+                        neighborhood: neighborhood,
+                        street: street,
+                        number: number,
+                    }
+                }
+            });
+            if (userAddressUpdate == null) throw new ErrorHandler(400, "Address update has not been completed");
+
+            res.status(200).send({ auth: true });
+        } catch (error) {
+            //console.log("error: ", error.message)
+            if (error instanceof ErrorHandler) {
+                next(error);
+            } else {
+                next(new ErrorHandler(500, "Internal Server Error"));
+            }
+        }
+    },
 }
