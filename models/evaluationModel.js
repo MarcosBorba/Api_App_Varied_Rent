@@ -8,11 +8,10 @@ const newEvaluation = new mongoose.Schema({
     _user_fk: { type: Number, required: [true, 'Ad User Key is required'] },
     user_name: { type: String, required: [true, 'User Name Evaluator is required'] },
     user_email: { type: String, required: [true, 'User Email Evaluator is required'], },
-
     amount_stars: { type: Number, required: [true, 'amount_stars is required'] },
     objective_opition: { type: String, required: [true, 'objective_opition is required'] },
     opinion: { type: String, required: [true, 'opinion is required'] },
-    evaluation_date: { type: String, required: [true, 'evaluation_date is required'] }, //numero de registro brasileiro
+    evaluation_date: { type: Date, required: [true, 'evaluation_date is required'] }, //numero de registro brasileiro
 
 }).index({ _ad_fk: 1, _user_fk: 1 }, { unique: 'The user has already rated this ad' });
 

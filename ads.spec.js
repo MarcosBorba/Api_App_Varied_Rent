@@ -18,7 +18,7 @@ let evaluationTest = {
     amount_stars: 4,
     objective_opition: "User1234",
     opinion: "lalala no lala",
-    evaluation_date: "lala no lala"
+    evaluation_date: "2020-07-21"
 }
 
 describe('Teste de evaluationTest', () => {
