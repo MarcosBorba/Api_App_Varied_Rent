@@ -12,7 +12,7 @@ chai.use(chaiHttp);
 
 let evaluationTest = {
     _ad_fk: 2,
-    _user_fk: 6,
+    _user_fk: "6000mi",
     user_name: "Particular",
     user_email: "000.265.421-90",
     amount_stars: 4,
@@ -21,7 +21,34 @@ let evaluationTest = {
     evaluation_date: "2020-07-21"
 }
 
-describe('Teste de evaluationTest', () => {
+let adsTest = {
+        _locator_fk: "5ebc83a7c2159307500e7f9c",
+        title: "ads test",
+        images: "image",
+        value: "2.00",
+        description: "ads test of test test result",
+        category: "cars",
+    }
+    /* 
+    evaluations: [],
+    reservations: [],
+    questions: [], */
+
+describe('Teste de adsTest', () => {
+    it('adsTest', (done) => {
+        chai.request(base_url)
+            .post('/adRoute/create_ad')
+            .send(adsTest)
+            .end((err, res) => {
+                console.log(res.body)
+                expect(res).to.have.status(200)
+                expect(res.body).to.be.a('object')
+                expect(res.body).to.have.property("user")
+                expect(res.body).to.have.property("message")
+                evaluationTest._ad_fk = res.body.user;
+                done();
+            })
+    })
     it('evaluationTest', (done) => {
             chai.request(base_url)
                 .post('/evaluationRoute/addEvaluation')

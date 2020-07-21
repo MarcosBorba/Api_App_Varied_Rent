@@ -4,6 +4,7 @@ var adsController = require('../controllers/adsController')
 var verify = require('../controllers/verifyJWT')
 
 /* GET ads listing. */
-router.post('/adsUser', verify.verifyJWT, adsController);
+//FIXME: colocar token depois para as rotas
+router.post('/create_ad', adsController.create_ads);
 
 module.exports = router;

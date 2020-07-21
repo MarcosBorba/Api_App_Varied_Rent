@@ -15,10 +15,12 @@ app.use(express.urlencoded({ extended: false }));
 //IMPORT ROUTES
 var usersRouter = require('./routes/userRoute');
 var evaRouter = require('./routes/evaluationRoute');
+var adsRouter = require('./routes/adsRoute');
 
 //ROUTES
 app.use('/userRoute', usersRouter);
 app.use('/evaluationRoute', evaRouter);
+app.use('/adRoute', adsRouter);
 
 app.use(function(err, req, res, next) {
     handleError(err, res);
