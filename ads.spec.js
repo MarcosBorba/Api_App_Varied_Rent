@@ -24,7 +24,7 @@ let evaluationTest = {
 let adsTest = {
         _locator_fk: "5ebc83a7c2159307500e7f9c",
         title: "ads test",
-        images: "image",
+        images: ["image"],
         value: "2.00",
         description: "ads test of test test result",
         category: "cars",
@@ -33,7 +33,9 @@ let adsTest = {
     evaluations: [],
     reservations: [],
     questions: [], */
-
+let getAds = {
+    _locator_fk: "5ebc83a7c2159307500e7f9c",
+}
 describe('Teste de adsTest', () => {
     it('adsTest', (done) => {
         chai.request(base_url)
@@ -50,14 +52,26 @@ describe('Teste de adsTest', () => {
             })
     })
     it('evaluationTest', (done) => {
+        chai.request(base_url)
+            .post('/evaluationRoute/addEvaluation')
+            .send(evaluationTest)
+            .end((err, res) => {
+                console.log(res.body)
+                expect(res).to.have.status(200)
+                expect(res.body).to.be.a('object')
+                expect(res.body).to.have.property("message")
+                done();
+            })
+    })
+    it('get_ads_one_user', (done) => {
             chai.request(base_url)
-                .post('/evaluationRoute/addEvaluation')
-                .send(evaluationTest)
+                .get('/adRoute/get_ads_one_user')
+                .send(getAds)
                 .end((err, res) => {
                     console.log(res.body)
                     expect(res).to.have.status(200)
                     expect(res.body).to.be.a('object')
-                    expect(res.body).to.have.property("message")
+                    expect(res.body).to.have.property("ads")
                     done();
                 })
         })

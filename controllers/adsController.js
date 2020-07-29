@@ -34,5 +34,23 @@ module.exports = {
                 next(new ErrorHandler(500, "Internal Server Error"));
             }
         }
-    }
+    },
+    get_ads_one_user: async(req, res, next) => {
+        try {
+            let { _locator_fk } = req.body;
+            console.log("locator is > ", _locator_fk);
+            _locator_fk = "5ebc83a7c2159307500e7f9c";
+            const findAdsOneUser = await AdsModel.find({ '_locator_fk': _locator_fk });
+            if (findAdsOneUser == null) throw new ErrorHandler(404, "No ads found");
+            console.log("find user is > ", findAdsOneUser);
+            res.status(200).send({ ads: findAdsOneUser });
+        } catch (error) {
+            console.log(error.message)
+            if (error instanceof ErrorHandler) {
+                next(error);
+            } else {
+                next(new ErrorHandler(500, "Internal Server Error"));
+            }
+        }
+    },
 }

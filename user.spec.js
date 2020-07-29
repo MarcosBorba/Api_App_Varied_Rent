@@ -121,6 +121,7 @@ describe('Teste de usuarios da api', () => {
                 //console.log(res.body)
                 expect(res).to.have.status(200)
                 expect(res.body).to.be.a('object')
+                expect(res.body).to.have.property("id")
                 expect(res.body).to.have.property("auth")
                 expect(res.body).to.have.property("token")
                 expect(res.body).to.have.property("name")
