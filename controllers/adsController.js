@@ -9,6 +9,7 @@ module.exports = {
     create_ads: async(req, res, next) => {
         try {
             const { _locator_fk, title, images, value, description, category } = req.body;
+            console.log('body >>>>>>>> ', req.formData)
 
             const newAds = new AdsModel({
                 _locator_fk,
