@@ -2,14 +2,22 @@ const EvaluationModel = require('../models/evaluationModel');
 const AdsModel = require('../models/adsModel');
 const QuestionModel = require('../models/questionModel');
 const ReservationModel = require('../models/reservationModel');
-var config = require('../config');
 const { ErrorHandler } = require('../controllers/errorHandler');
 
 module.exports = {
     create_ads: async(req, res, next) => {
         try {
-            const { _locator_fk, title, images, value, description, category } = req.body;
-            console.log('body >>>>>>>> ', req.formData)
+            const { _locator_fk, title, value, description, category } = req.body;
+            /* console.log('body >>>>>>>> ')
+            console.log('body >>>>>>>> ', req.body)
+            console.log('body >>>>>>>> ', req.files) */
+            var images = [];
+            await req.files.forEach(async function(item) {
+                images.push(item.location)
+            });
+
+            const result1 = await images.every((item, index, array) => typeof item === 'string' || item instanceof String);
+            if (result1 == false) throw new ErrorHandler(500, 'Registration error => erro ao realizar upload de imagens')
 
             const newAds = new AdsModel({
                 _locator_fk,
@@ -19,13 +27,14 @@ module.exports = {
                 description,
                 category,
             });
-
+            console.log(newAds)
             await newAds.save()
                 .then(user => {
                     res.status(200).send({ user: user._id, message: 'ads create successfully' });
                 })
-                .catch(error => {
-                    throw new ErrorHandler(500, 'Registration error => ' + error.message)
+                .catch(async error => {
+                    var message = await error.message.substring(error.message.lastIndexOf(": ") + 1, )
+                    throw new ErrorHandler(500, 'Registration error =>' + message)
                 })
         } catch (error) {
             console.log(error.message)

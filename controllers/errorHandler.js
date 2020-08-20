@@ -6,7 +6,8 @@ class ErrorHandler extends Error {
     }
 }
 const handleError = (err, res) => {
-    const { statusCode, message } = err;
+    let { statusCode, message } = err;
+    statusCode == undefined ? statusCode = 500 : false;
     res.status(statusCode).json({
         status: "error",
         statusCode,

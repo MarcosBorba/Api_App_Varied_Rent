@@ -1,6 +1,5 @@
 const UserModel = require('../models/userModel');
 var jwt = require('jsonwebtoken');
-var config = require('../config');
 const { ErrorHandler } = require('../controllers/errorHandler');
 //TODO: otimizar para melhorar seguranca contra ataques
 module.exports = {
@@ -46,7 +45,7 @@ module.exports = {
             if (!validPassword) {
                 throw new ErrorHandler(401, "incorrect password");
             }
-            const token = jwt.sign({ id: userLogin._id }, config.secret, {});
+            const token = jwt.sign({ id: userLogin._id }, process.env.SECRET_KEY, {});
             res.status(200).send({
                 id: userLogin._id,
                 auth: true,

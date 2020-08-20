@@ -1,3 +1,4 @@
+require('dotenv').config()
 var express = require('express');
 var logger = require('morgan');
 require('./config/connection_database.js');
@@ -10,7 +11,7 @@ var app = express();
 
 app.use(logger('combined')); //or 'dev'
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 
 //IMPORT ROUTES
 var usersRouter = require('./routes/userRoute');
