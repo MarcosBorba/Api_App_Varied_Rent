@@ -1,5 +1,4 @@
 const EvaluationModel = require('../models/evaluationModel');
-var config = require('../config');
 const { ErrorHandler } = require('../controllers/errorHandler');
 
 module.exports = {
