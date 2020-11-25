@@ -6,7 +6,7 @@ module.exports = {
         try {
             const { _ad_fk, _tenant_fk, question, answer } = req.body;
 
-            const newQuestionAndAnswer = new EvaluationModel({
+            const newQuestionAndAnswer = new QuestionAndAnswerModel({
                 _ad_fk,
                 _tenant_fk,
                 question,
@@ -18,10 +18,10 @@ module.exports = {
                     res.status(200).send({ message: 'create successfully', id: questionAndAnswer._id });
                 })
                 .catch(error => {
-                    throw new ErrorHandler(500, 'Registration error => ' + Object.values(error.errors)[0].properties.message)
+                    throw new ErrorHandler(500, 'Registration error => ' + Object.values(error.errors)[0])
                 })
-        } catch (e) {
-            console.log(error.message)
+        } catch (error) {
+            console.log("error controller -> ", error.message)
             if (error instanceof ErrorHandler) {
                 next(error);
             } else {
