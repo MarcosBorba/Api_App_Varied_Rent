@@ -5,7 +5,8 @@
     "scripts": {
         "start": "nodemon ./bin/www",
         "test": "mocha 'user.spec.js'",
-        "test2": "mocha 'ads.spec.js'"
+        "test2": "mocha 'ads.spec.js'",
+        "test3": "mocha 'evaluation.spec.js'"
     },
     "dependencies": {
         "aws-sdk": "^2.734.0",

@@ -1,6 +1,6 @@
 const EvaluationModel = require('../models/evaluationModel');
 const AdsModel = require('../models/adsModel');
-const QuestionModel = require('../models/questionModel');
+const QuestionModel = require('../models/questionAndAnswerModel');
 const ReservationModel = require('../models/reservationModel');
 const { ErrorHandler } = require('../controllers/errorHandler');
 
