@@ -7,5 +7,6 @@ var verify = require('../controllers/verifyJWT')
 /* GET ads listing. */
 router.post('/add_question_and_answer', evaluationController.add_question_and_answer);
 router.get('/get_questions_and_answers_one_ad', evaluationController.get_questions_and_answers_one_ad);
+router.put('/update_question_and_answer_one_ad', evaluationController.update_question_and_answer_one_ad);
 
 module.exports = router;
