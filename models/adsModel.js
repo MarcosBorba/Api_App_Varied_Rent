@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 const beautifyUnique = require('mongoose-beautiful-unique-validation');
 const aws = require("aws-sdk");
 aws.config.region = process.env.AWS_DEFAULT_REGION;
-const s3 = new aws.S3();
+const s3 = new aws.S3({ region: process.env.AWS_DEFAULT_REGION, accessKeyId: process.env.AWS_ACCESS_KEY_ID, secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY });
 
 const newAds = new mongoose.Schema({
     _locator_fk: { type: String, required: [true, 'Locator User Ad is required'] },
@@ -59,10 +59,10 @@ newAds.path('images').validate(function(images) {
     return true;
 }, 'error checking image for upload');
 
-newAds.path('images').validate(function(images) {
+/* newAds.path('images').validate(function(images) {
     if (images.length < 2) { return false }
     return true;
-}, `The minimum number of images is 2`);
+}, `The minimum number of images is 2`); */
 
 
 newAds.plugin(beautifyUnique, {

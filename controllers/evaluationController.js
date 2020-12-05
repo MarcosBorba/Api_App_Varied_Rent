@@ -1,4 +1,5 @@
 const EvaluationModel = require('../models/evaluationModel');
+const AdsModel = require('../models/adsModel');
 const { ErrorHandler } = require('../controllers/errorHandler');
 
 module.exports = {
@@ -18,8 +19,14 @@ module.exports = {
             });
 
             await newEva.save()
-                .then(user => {
-                    res.status(200).send({ message: 'create successfully', id: user._id });
+                .then(async user => {
+                    let updateAds = await AdsModel.findOneAndUpdate({ '_id': user._ad_fk }, {
+                        $push: {
+                            'starsEvaluations': newEva.amount_stars,
+                        }
+                    });
+                    if (updateAds == null) throw new ErrorHandler(404, "Error on insert Evaluation");
+                    res.status(200).send({ message: 'create successfully', id: user._id, updateAds: updateAds });
                 })
                 .catch(error => {
                     throw new ErrorHandler(500, 'Registration error => ' + Object.values(error.errors)[0].properties.message)
