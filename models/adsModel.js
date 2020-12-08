@@ -3,6 +3,7 @@ const beautifyUnique = require('mongoose-beautiful-unique-validation');
 const aws = require("aws-sdk");
 aws.config.region = process.env.AWS_DEFAULT_REGION;
 const s3 = new aws.S3({ region: process.env.AWS_DEFAULT_REGION, accessKeyId: process.env.AWS_ACCESS_KEY_ID, secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY });
+const { ErrorHandler } = require('../controllers/errorHandler');
 
 const newAds = new mongoose.Schema({
     _locator_fk: { type: String, required: [true, 'Locator User Ad is required'] },
@@ -20,7 +21,42 @@ const newAds = new mongoose.Schema({
     category: { type: String, required: [true, 'Category Ad is required'] },
 })
 
-newAds.pre("remove", async function() {
+newAds.pre("updateOne", async function() {
+    var deleteParam = {
+        Bucket: process.env.BUCKET_NAME,
+        Delete: {
+            Objects: []
+        }
+    };
+
+    await this._update.$pull.images._id.forEach(async function(item) {
+        deleteParam.Delete.Objects.push({ Key: item.key })
+    });
+    console.log("delete params 1 ---->>>> ", deleteParam.Bucket)
+    console.log("delete params 2 ---->>>> ", deleteParam.Delete)
+    if (process.env.STORAGE_TYPE === "s3") {
+        return s3.deleteObjects(
+            deleteParam,
+            function(err, data) {
+                if (err) console.log(err, err.stack);
+                else console.log(data);
+            }
+        ).promise().then(response => {
+            console.log("response.status then");
+            console.log(response);
+        }).catch(response => {
+            throw new ErrorHandler(400, "Error on Update Ad")
+            console.log("response.status catch error");
+            console.log(response);
+        });
+    } else {
+        return promisify(fs.unlink)(
+            path.resolve(__dirname, "..", "uploads", this.key)
+        );
+    }
+});
+
+newAds.pre("remove", { document: true, query: false }, async function() {
     var deleteParam = {
         Bucket: process.env.BUCKET_NAME,
         Delete: {
@@ -29,6 +65,9 @@ newAds.pre("remove", async function() {
     };
 
     await this.images.forEach(async function(item) {
+        if (item._id) {
+
+        }
         deleteParam.Delete.Objects.push({ Key: item.key })
     });
 

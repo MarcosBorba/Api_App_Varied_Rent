@@ -126,4 +126,58 @@ module.exports = {
             }
         }
     },
+    update_ads: async(req, res, next) => {
+        try {
+            const { _id, title, value, description, category, imagesAwsRemove } = req.body;
+            //console.log('body >>>>>>>> ', req.body)
+            //console.log('body >>>>>>>> ', req.files)
+            var images = [];
+            var imagesRemoveDataBase = await JSON.parse(imagesAwsRemove);
+            await req.files.forEach(async function(item) {
+                images.push({ url: item.location, key: item.key })
+            });
+            if (imagesRemoveDataBase.length > 0) {
+                await AdsModel.updateOne({ '_id': _id }, {
+                    $pull: {
+                        'images': {
+                            _id: imagesRemoveDataBase
+                        }
+                    },
+                    function(err, data) {
+                        console.log("error functions ");
+
+                        if (err) {
+                            throw new ErrorHandler(400, "Image database not deleted");
+                        }
+                    }
+                });
+            }
+
+
+            await AdsModel.findOneAndUpdate({ '_id': _id }, {
+                    $set: {
+                        'title': title,
+                        'value': value,
+                        'description': description,
+                        'category': category,
+                    },
+                    $push: {
+                        'images': images,
+                    }
+                }).then(user => {
+                    res.status(200).send({ msg: "updated ad successfully" });
+                })
+                .catch(error => {
+                    res.status(400).send({ msg: "unsuccessful ad update" });
+                });
+        } catch (error) {
+            console.log("############################################# ", error.message)
+            if (error instanceof ErrorHandler) {
+                next(error);
+            } else {
+                next(new ErrorHandler(500, "Internal Server Error"));
+            }
+        }
+
+    },
 }
