@@ -18,12 +18,14 @@ var usersRouter = require('./routes/userRoute');
 var adsRouter = require('./routes/adsRoute');
 var evaluationRouter = require('./routes/evaluationRoute');
 var questionAndAnswerRouter = require('./routes/questionAndAnswerRoute');
+var favoriteAdsRouter = require('./routes/favoriteAdsRoute');
 
 //ROUTES
 app.use('/userRoute', usersRouter);
 app.use('/adRoute', adsRouter);
 app.use('/evaluationRoute', evaluationRouter);
 app.use('/questionAndAnswerRoute', questionAndAnswerRouter);
+app.use('/favoriteAdsRoute', favoriteAdsRouter);
 
 app.use(function(err, req, res, next) {
     handleError(err, res);
