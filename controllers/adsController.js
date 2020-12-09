@@ -1,6 +1,8 @@
+const UserModel = require('../models/userModel');
+const FavoriteAdsModel = require('../models/favoriteAdsModel');
+const QuestionAndAnswerModel = require('../models/questionAndAnswerModel');
 const EvaluationModel = require('../models/evaluationModel');
 const AdsModel = require('../models/adsModel');
-const QuestionAndAnswerModel = require('../models/questionAndAnswerModel');
 const ReservationModel = require('../models/reservationModel');
 const { ErrorHandler } = require('../controllers/errorHandler');
 
@@ -179,5 +181,61 @@ module.exports = {
             }
         }
 
+    },
+    get_info_ad: async(req, res, next) => {
+        try {
+            let { _ad_fk, _user_id, _locator_fk } = req.query;
+            //console.log('query ->>> ', req.query)
+            let userLocator;
+            let favoriteAd;
+            let questionsAndAnswers;
+            let evaluations;
+            //user
+            await UserModel.findOne({ '_id': _locator_fk })
+                .then(user => {
+                    userLocator = user;
+                })
+                .catch(async error => {
+                    throw new ErrorHandler(404, "Error fetching ad");
+                });
+            //favorite
+            await FavoriteAdsModel.find({ '_ad_fk': _ad_fk, '_locator_fk': _user_id })
+                .then(favorite => {
+                    favoriteAd = true;
+                })
+                .catch(async error => {
+                    throw new ErrorHandler(404, "Error fetching favorite ad");
+                });
+            //questions and answers
+            await QuestionAndAnswerModel.find({ '_ad_fk': _ad_fk })
+                .then(questionsAnswers => {
+                    questionsAndAnswers = questionsAnswers;
+                })
+                .catch(async error => {
+                    throw new ErrorHandler(404, "Error fetching Questions and answers ad");
+                });
+            //evaluations
+            await EvaluationModel.find({ '_ad_fk': _ad_fk })
+                .then(evaluation => {
+                    evaluations = evaluation;
+                })
+                .catch(async error => {
+                    throw new ErrorHandler(404, "Error fetching Questions and answers ad");
+                });
+
+            res.status(200).send({
+                question_and_answer: questionsAndAnswers,
+                userLocator: userLocator,
+                favoriteAd: favoriteAd,
+                evaluation: evaluations,
+            });
+        } catch (error) {
+            console.log("error on controller ->>>> ", error.message)
+            if (error instanceof ErrorHandler) {
+                next(error);
+            } else {
+                next(new ErrorHandler(500, "Internal Server Error"));
+            }
+        }
     },
 }

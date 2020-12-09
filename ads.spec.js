@@ -39,7 +39,7 @@ let getAds = {
 let ad_fk;
 
 describe('Teste de adsTest', () => {
-    it('adsTest', (done) => {
+    /* it('adsTest', (done) => {
         chai.request(base_url)
             .post('/adRoute/create_ad')
             .send(adsTest)
@@ -52,8 +52,8 @@ describe('Teste de adsTest', () => {
                 ad_fk = res.body.user;
                 done();
             })
-    })
-    it('get_ads_one_user', (done) => {
+    }) */
+    /* it('get_ads_one_user', (done) => {
         chai.request(base_url)
             .get('/adRoute/get_ads_one_user')
             .send(getAds)
@@ -64,32 +64,52 @@ describe('Teste de adsTest', () => {
                 expect(res.body).to.have.property("ads")
                 done();
             })
-    })
-    it('delete one ad', (done) => {
-        let query = {
-            _id: "5fcb2ddd2594d454c4b30ede",
-        }
-        console.log("query -> ", query);
-        chai.request(base_url)
-            .delete('/adRoute/delete_ads')
-            .query(query)
-            .end((err, res) => {
-                expect(res).to.have.status(200)
-                expect(res.body).to.be.a('object')
-                expect(res.body).to.have.property("message")
-                done();
-            })
-    })
-    after(done => {
-        let AdsModel = require('./models/adsModel')
-        AdsModel.deleteOne({ "_id": ad_fk })
-            .then(ok => {
-                console.log("ok => ", ok)
-                done()
-            })
-            .catch(error => {
-                console.log("Error: ", error)
-                done()
-            })
-    });
+    }) */
+    it('get_info_ad', (done) => {
+            let getInfoJson = {
+                _user_id: "5f43b1ec49984d149c28d0c0",
+                _ad_fk: "5fcf87edc160dc34e053eeb5",
+                _locator_fk: "5fcefc46d4048a0e3c2f3576",
+            }
+            chai.request(base_url)
+                .get('/adRoute/get_info_ad')
+                .query(getInfoJson)
+                .end((err, res) => {
+                    console.log("body finds ", res.body)
+                    expect(res).to.have.status(200)
+                    expect(res.body).to.be.a('object')
+                    expect(res.body).to.have.property("userLocator")
+                    expect(res.body).to.have.property("favoriteAd")
+                    expect(res.body).to.have.property("questionsAndAnswers")
+                    expect(res.body).to.have.property("evaluations")
+                    done();
+                })
+        })
+        /* it('delete one ad', (done) => {
+            let query = {
+                _id: "5fcb2ddd2594d454c4b30ede",
+            }
+            console.log("query -> ", query);
+            chai.request(base_url)
+                .delete('/adRoute/delete_ads')
+                .query(query)
+                .end((err, res) => {
+                    expect(res).to.have.status(200)
+                    expect(res.body).to.be.a('object')
+                    expect(res.body).to.have.property("message")
+                    done();
+                })
+        })
+        after(done => {
+            let AdsModel = require('./models/adsModel')
+            AdsModel.deleteOne({ "_id": ad_fk })
+                .then(ok => {
+                    console.log("ok => ", ok)
+                    done()
+                })
+                .catch(error => {
+                    console.log("Error: ", error)
+                    done()
+                })
+        }); */
 })

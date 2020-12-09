@@ -9,7 +9,7 @@ const base_url = 'http://localhost:3000';
 
 //usa a biblioteca chaihttp para simular requisicoes na api
 chai.use(chaiHttp);
-
+//5fcf87edc160dc34e053eeb5
 let addFavoriteAd = {
     _ad_fk: "5fcefdb9d4048a0e3c2f3578",
     _locator_fk: "5f43b1ec49984d149c28d0c0",
