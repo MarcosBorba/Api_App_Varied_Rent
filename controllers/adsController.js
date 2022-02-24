@@ -207,7 +207,7 @@ module.exports = {
                     throw new ErrorHandler(404, "Error fetching favorite ad");
                 });
             //questions and answers
-            await QuestionAndAnswerModel.find({ '_ad_fk': _ad_fk })
+            await QuestionAndAnswerModel.find({ '_ad_fk': _ad_fk }).sort({ _id: -1 })
                 .then(questionsAnswers => {
                     questionsAndAnswers = questionsAnswers;
                 })
@@ -220,7 +220,7 @@ module.exports = {
                     evaluations = evaluation;
                 })
                 .catch(async error => {
-                    throw new ErrorHandler(404, "Error fetching Questions and answers ad");
+                    throw new ErrorHandler(404, "Error fetching Evaluations ad");
                 });
 
             res.status(200).send({

@@ -8,6 +8,7 @@ connection.connect('mongodb://localhost:27017/varied_rent', {
     useCreateIndex: true
 });
 
+
 connection.connection.on('connected', function() {
     console.log('connected to db');
 });

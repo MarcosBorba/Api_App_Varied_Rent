@@ -4,13 +4,12 @@ const { ErrorHandler } = require('../controllers/errorHandler');
 module.exports = {
     add_question_and_answer: async(req, res, next) => {
         try {
-            const { _ad_fk, _tenant_fk, question, answer } = req.body;
+            const { _ad_fk, _tenant_fk, question } = req.body;
 
             const newQuestionAndAnswer = new QuestionAndAnswerModel({
                 _ad_fk,
                 _tenant_fk,
                 question,
-                answer,
             });
 
             await newQuestionAndAnswer.save()
@@ -34,7 +33,7 @@ module.exports = {
             let { _ad_fk } = req.query;
             console.log('req query', req.query)
             console.log('ad fk = ', _ad_fk)
-            const findQuestionsAndAnswerOneAd = await QuestionAndAnswerModel.find({ '_ad_fk': _ad_fk });
+            const findQuestionsAndAnswerOneAd = await QuestionAndAnswerModel.find({ '_ad_fk': _ad_fk }).sort({ _id: -1 });
             if (findQuestionsAndAnswerOneAd == null) throw new ErrorHandler(404, "No question and answer ad found");
             console.log("find QuestionAndAnswer is > ", findQuestionsAndAnswerOneAd);
             res.status(200).send({ question_and_answer: findQuestionsAndAnswerOneAd });
@@ -53,19 +52,12 @@ module.exports = {
             console.log('req query', req.query)
             console.log('id = ', _id)
 
-            const newQuestionAndAnswer = new QuestionAndAnswerModel({
-                _id,
-                _ad_fk,
-                _tenant_fk,
-                question,
-                answer,
-            })
             const updateQuestionsAndAnswer = await QuestionAndAnswerModel.findOneAndUpdate({ '_id': _id }, {
                 $set: {
-                    'question': newQuestionAndAnswer.question,
-                    'answer': newQuestionAndAnswer.answer == '' ? null : newQuestionAndAnswer.answer,
+                    'question': question,
+                    'answer': answer == '' ? null : answer,
                 }
-            });
+            }).sort({ _id: -1 });
             if (updateQuestionsAndAnswer == null) throw new ErrorHandler(404, "No question and answer ad found");
             //console.log("update QuestionAndAnswer is > ", updateQuestionsAndAnswer);
             res.status(200).send({ question_and_answer: updateQuestionsAndAnswer });
